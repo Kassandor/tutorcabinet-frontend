@@ -1,11 +1,10 @@
 <script setup>
 import {ref} from 'vue'
 
-const appTitle = ref('Awesome App')
+const appTitle = ref('Кабинет репетитора')
 const sidebar = ref(false)
 const menuItems = [
   {title: 'Home', path: '/', icon: 'mdi-home-account'},
-  {title: 'Sign Up', path: '/signup', icon: 'mdi-account-plus'},
   {title: 'Sign In', path: '/signin', icon: 'mdi-login'}
 ]
 </script>
