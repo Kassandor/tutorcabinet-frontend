@@ -39,6 +39,7 @@ async function submit(submitEventPromise) {
       <v-col cols="12" md="4">
         <v-form fast-fail @submit.prevent="submit">
           <v-text-field
+            variant="underlined"
             v-model="email"
             label="Email"
             type="email"
@@ -47,6 +48,7 @@ async function submit(submitEventPromise) {
           ></v-text-field>
 
           <v-text-field
+            variant="underlined"
             v-model="password"
             label="Password"
             type="password"
