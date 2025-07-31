@@ -1,5 +1,6 @@
 <script setup>
 import {ref} from 'vue'
+import axios from 'axios'
 
 const email = ref('')
 const password = ref('')
@@ -18,13 +19,31 @@ const passwordRules = [
   },
 ]
 
-async function submit(submitEventPromise) {
+async function OnSubmit(submitEventPromise) {
+  console.log(submitEventPromise)
   const {valid, errors} = await submitEventPromise
-  if (valid) {
-    console.log("мы в if")
-  } else {
-    console.log("мы в else")
-    return // abort submit
+  if (!valid) {
+    console.log("валидация не прошла", errors)
+    return
+  }
+
+  try {
+    const response = await axios.post('/api/auth', {
+      email: email.value,
+      password: password.value,
+    })
+
+    console.log('Все гуд:', response.data)
+    localStorage.setItem('jwt', response.data['token'])
+  } catch (error) {
+    if (error.response) {
+      console.error('Ошибка от сервера:', error.response.status, error.response.data)
+      getRefreshToken
+    } else if (error.request) {
+      console.error('Нет ответа от сервера:', error.request)
+    } else {
+      console.error('Ошибка при настройке запроса:', error.message)
+    }
   }
 }
 </script>
@@ -37,7 +56,7 @@ async function submit(submitEventPromise) {
       </v-col>
 
       <v-col cols="12" md="4">
-        <v-form fast-fail @submit.prevent="submit">
+        <v-form fast-fail @submit.prevent="OnSubmit">
           <v-text-field
             variant="underlined"
             v-model="email"
