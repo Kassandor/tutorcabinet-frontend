@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from 'vue'
-import axios from 'axios'
+import {login} from "@/api/endpoints/auth.js";
 
 const email = ref('')
 const password = ref('')
@@ -26,25 +26,7 @@ async function OnSubmit(submitEventPromise) {
     console.log("валидация не прошла", errors)
     return
   }
-
-  try {
-    const response = await axios.post('/api/auth', {
-      email: email.value,
-      password: password.value,
-    })
-
-    console.log('Все гуд:', response.data)
-    localStorage.setItem('jwt', response.data['token'])
-  } catch (error) {
-    if (error.response) {
-      console.error('Ошибка от сервера:', error.response.status, error.response.data)
-      getRefreshToken
-    } else if (error.request) {
-      console.error('Нет ответа от сервера:', error.request)
-    } else {
-      console.error('Ошибка при настройке запроса:', error.message)
-    }
-  }
+  await login(email.value, password.value)
 }
 </script>
 
