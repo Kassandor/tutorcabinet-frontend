@@ -4,10 +4,12 @@ import {tokenService} from "@/api/services/tokenService.js";
 let isRefreshing = false
 let subscribers = []
 
+// Очередь запросов, которые необходимо будет переотправить, если будет получен валидный токен
 function subscribe(cb) {
   subscribers.push(cb)
 }
 
+// Событие обновления токена (успешное)
 function onRefreshed(newToken) {
   subscribers.forEach(cb => cb(newToken))
   subscribers = []

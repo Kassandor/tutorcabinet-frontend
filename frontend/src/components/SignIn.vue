@@ -1,6 +1,9 @@
 <script setup>
 import {ref} from 'vue'
 import {login} from "@/api/endpoints/auth.js";
+import {useRouter} from "vuetify/lib/composables/router.js";
+
+const router = useRouter()
 
 const email = ref('')
 const password = ref('')
@@ -26,7 +29,8 @@ async function OnSubmit(submitEventPromise) {
     console.log("валидация не прошла", errors)
     return
   }
-  await login(email.value, password.value)
+  const res = await login(email.value, password.value)
+  if (res) router.push('/')
 }
 </script>
 

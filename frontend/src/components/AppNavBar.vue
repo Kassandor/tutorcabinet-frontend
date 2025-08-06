@@ -1,12 +1,23 @@
 <script setup>
-import {ref} from 'vue'
+import {computed, ref} from 'vue'
+import {useAuthStore} from "@/stores/auth.js";
 
+const auth = useAuthStore()
 const appTitle = ref('Кабинет репетитора')
 const sidebar = ref(false)
-const menuItems = [
+
+const allMenuItems = [
   {title: 'Home', path: '/', icon: 'mdi-home-account'},
-  {title: 'Sign In', path: '/signin', icon: 'mdi-login'}
+  {title: 'Sign In', path: '/signin', icon: 'mdi-login', onlyGuest: true}
 ]
+
+const menuItems = computed(() => allMenuItems.filter(item => {
+  if (item.onlyGuest) {
+    return !auth.isAuthenticated
+  }
+  return true
+}))
+
 </script>
 
 <template>
@@ -18,9 +29,9 @@ const menuItems = [
         :to="item.path"
         link
       >
-        <v-list-item-icon>
+        <v-list-img>
           <v-icon>{{ item.icon }}</v-icon>
-        </v-list-item-icon>
+        </v-list-img>
         <v-list-item-title>{{ item.title }}</v-list-item-title>
       </v-list-item>
     </v-list>
