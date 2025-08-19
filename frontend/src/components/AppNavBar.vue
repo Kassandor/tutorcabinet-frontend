@@ -8,10 +8,14 @@ const sidebar = ref(false)
 
 const allMenuItems = [
   {title: 'Home', path: '/', icon: 'mdi-home-account'},
+  {title: 'Profile', path: '/me', icon: 'mdi-account', onlyAuth: true},
   {title: 'Sign In', path: '/signin', icon: 'mdi-login', onlyGuest: true}
 ]
 
 const menuItems = computed(() => allMenuItems.filter(item => {
+  if (item.onlyAuth){
+    return auth.isAuthenticated
+  }
   if (item.onlyGuest) {
     return !auth.isAuthenticated
   }
