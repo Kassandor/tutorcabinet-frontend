@@ -1,5 +1,5 @@
 <template>
-  <HelloWorld />
+  <IndexComponent />
 </template>
 
 <script setup>

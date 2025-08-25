@@ -39,6 +39,19 @@ api.interceptors.response.use(
   response => response,
   async error => {
     const original = error.config
+
+    // Если у пользователя нет access или refresh токена - отправляем на SignIn форму
+    if (!tokenService.getRefreshToken() || !tokenService.getAccessToken()) {
+      tokenService.clearTokens();
+      window.location.href = "/signin"
+      return Promise.reject(error)
+    }
+
+    // Если ответ сервера 401 и запрос ещё не повторялся:
+    // 1. Если уже выполняется refresh, подписываем этот запрос на уведомление о новом access token.
+    //    После обновления токена запрос повторится автоматически.
+    // 2. Если refresh ещё не выполняется, помечаем, что он начался (isRefreshing = true),
+    // и дальше будет запущен процесс обновления токена.
     if (error.response?.status == 401 && !original._retry) {
       if (isRefreshing) {
         return new Promise(resolve => {
@@ -54,7 +67,6 @@ api.interceptors.response.use(
         const refreshResponse = await api.post('/auth/refresh', {
           refreshToken: tokenService.getRefreshToken(),
         })
-
         const newAccessToken = refreshResponse.data.access_token;
         const newRefreshToken = refreshResponse.data.refresh_token;
         tokenService.setAccessToken(newAccessToken)
