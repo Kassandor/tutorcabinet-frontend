@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { getProfile } from '@/api/endpoints/profile.js';
 
 const state = reactive({

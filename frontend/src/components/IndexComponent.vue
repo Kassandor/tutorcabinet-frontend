@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { getIndexPage } from '@/api/endpoints/index.js';
 
 const state = reactive({
@@ -10,8 +10,7 @@ const state = reactive({
 
 onMounted(async () => {
   try {
-    const { data } = await getIgndexPage();
-    console.log(data);
+    const { data } = await getIndexPage();
     Object.assign(state.user, data);
   } catch (e) {
     state.error = e?.message || 'Ошибка при загрузке главной страницы';
